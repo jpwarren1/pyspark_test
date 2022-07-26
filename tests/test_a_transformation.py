@@ -1,7 +1,7 @@
 import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql import types as T
-from a_transformation.word_count import do_word_counts
+from transformations import a_transformation as at
 
 @pytest.fixture
 def tempSparkContext():
@@ -23,7 +23,7 @@ def test_do_word_counts(tempSparkContext):
 
     df = tempSparkContext.createDataFrame(data, T.StringType()).toDF('sentences')
 
-    df_results = do_word_counts(df)
+    df_results = at.do_word_counts(df)
     results_dict = df_results.rdd.collectAsMap()
    
     expected_results = {'hello':2, 'spark':3, 'again':1}  
