@@ -1,24 +1,30 @@
 import pytest
-from pyspark import SparkContext
-from transformations import a_transformation as at
+from pyspark.sql import SparkSession
+from pyspark.sql import types as T
+from a_transform.word_count import do_word_counts
 
-@pytest.fixture(scope='session')
-def spark_context():
-    sc = SparkContext.getOrCreate()
-    return sc
+@pytest.fixture
+def tempSparkContext():
+    return SparkSession.builder \
+    .appName("testing example") \
+    .getOrCreate()
+  
 
-def test_do_word_counts(spark_context):
+def test_do_word_counts(tempSparkContext):
     """ test word couting
     Args:
-        spark_context: test fixture SparkContext
+        tempSparkContext: test fixture SparkSession
     """
-    test_input = [
-        ' hello spark ',
-        ' hello again spark spark'
-    ]
-
-    input_rdd = spark_context.parallelize(test_input, 1)
-    results = at.do_word_counts(input_rdd)
     
+    data =  [
+        'hello spark',
+        'hello again spark spark'
+     ]
+
+    df = tempSparkContext.createDataFrame(data, T.StringType()).toDF('sentences')
+
+    df_results = do_word_counts(df)
+    results_dict = df_results.rdd.collectAsMap()
+   
     expected_results = {'hello':2, 'spark':3, 'again':1}  
-    assert results == expected_results
+    assert results_dict == expected_results
