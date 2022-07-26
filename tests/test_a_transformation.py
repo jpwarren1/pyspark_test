@@ -1,7 +1,7 @@
 import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql import types as T
-from a_transform.word_count import do_word_counts
+from a_transformation.word_count import do_word_counts
 
 @pytest.fixture
 def tempSparkContext():

@@ -1,8 +1,11 @@
 from pyspark.sql import functions as SF
+from pyspark.sql import SparkSession
 from operator import add
 
 def spark_context():
-    sc = SparkContext.getOrCreate()
+    sc = SparkSession.builder \
+    .appName("testing example") \
+    .getOrCreate()
     return sc
 
 def do_word_counts(df):
