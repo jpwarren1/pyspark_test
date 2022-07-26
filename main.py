@@ -4,30 +4,27 @@
 # COMMAND ----------
 
 from transformations import a_transformation as at
+from pyspark.sql import types as T
+import sys
+import pytest
+import os
 
 # COMMAND ----------
 
-sc = at.spark_context()
+sys.dont_write_bytecode = True
 
 # COMMAND ----------
 
-test_input = [
-        ' hello spark ',
-        ' hello again spark spark'
-    ]
-input_rdd = sc.parallelize(test_input, 1)
+repo = os.getcwd()
+os.chdir(repo)
 
 # COMMAND ----------
 
-results = at.do_word_counts(input_rdd)
+sys.dont_write_bytecode = True
 
 # COMMAND ----------
 
-results
-
-# COMMAND ----------
-
-!python -m pytest
+retcode = pytest.main([".", "-p", "no:cacheprovider"])
 
 # COMMAND ----------
 
